@@ -85,7 +85,7 @@ class Flow:
         self.loadbalancer = balancer()
         self.tasks = tasks
 
-        self._CLIENT_PUSH_DELAY = 0.5
+        self._CLIENT_PUSH_DELAY = 0.3
 
     def generate(self, server_opt:tuple=(10, None), client_opt:tuple=(300, None, None)) -> None:
 
@@ -195,11 +195,18 @@ if __name__ == "__main__":
     CompareLB --> Process excution time: 75.106835s
     """
 
-    mainflow = Flow(CompareLB, 100) # LoadBalancer(Weighted Round Robin + Least Response Time Method) | CompareLB(Round Robin Method)
-    sec = mainflow.run()
+    mainflow = Flow(LoadBalancer, 100) # LoadBalancer(Weighted Round Robin + Least Response Time Method) | CompareLB(Round Robin Method)
+    sec_main = mainflow.run()
 
-    print("=" * 35)
-    print(f'Process excution time: {sec:5f}s')
-    print("=" * 35)
+    compareflow = Flow(CompareLB, 100)
+    sec_compare = compareflow.run()
+
+    os.system("cls")
+
+    print("=" * 45)
+    print(f'[Process excution time] [sec]')
+    print(f'LoadBalancer            {sec_main:5f}s')
+    print(f'CompareBalancer         {sec_compare:5f}s')
+    print("=" * 45)
 
     killprocess()
